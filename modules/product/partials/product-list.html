@@ -1,0 +1,156 @@
+<div class="row" ng-init="getAll();">
+    <div class="col-lg-12">
+        <h1 class="page-header">Product List</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div align="center" v-align="bottom" ng-hide="loading1 == 1" style="margin: auto; height:400px;">
+    <img src="resources/images/reload.gif" style="margin-top: 170px; height: 60px;width: 60px;">
+</div>
+<div class="row" ng-show="loading1 == 1">
+  <div class="col-lg-12">
+      <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+              <div class="col-lg-12">
+                  <input type="text" class="form-control" id="searchtext" ng-model="searchtext" onkeyup="angular.element(this).scope().getSearch();" placeholder = "Search by - Product Name"/>
+                </div>
+            </div>
+            <br>
+            <div class="row" id="addrecord">
+                <center><p>No record available please add new product</p><br><a class="btn btn-outline btn-info" href="#/product/add">Add</a></center>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Product Price</th>
+                    <th>Product Description</th>
+                    <th colspan="2">Product Category</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="prod in filteredTodos | filter : prod">
+                      <td>{{prod.p_name}}</td>
+                      <td>{{prod.p_price | currency:"₹":0}}</td>
+                      <td colspan="2" style="width: 200px"><textarea name="address" rows="2" id="address" style="min-width: 100%;resize:none;border: none" readonly>{{prod.p_desc}}</textarea></td>
+                      <td>{{prod.p_cate}}</td>
+                      <td>
+                        <a ng-click="editProd(prod.p_id)"><i class="fa fa-pencil"></i></a>
+                        <i class="fa fa-trash" ng-click="deleteProd(prod.p_id)"></i>
+
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                  <br>
+                  <span id="pagination_detail" ng-show="filteredTodos.length > 0" class="pagination_ds">Showing {{ filterUserend }} to {{filterUser}} of {{productListcount}} Products's</span>
+            <span id="pagination_div" align="right" ng-show="filteredTodos.length > 0"
+                  style="float: right;margin-top: -27px;">
+              <pagination
+                      ng-model="currentPage"
+                      total-items="productListcount"
+                      max-size="maxSize"
+                      boundary-links="true" data-num-pages="noOfPages"
+                      items-per-page="numPerPage">
+              </pagination>
+            </span>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+      </div>
+      <!-- /.panel -->
+  </div>
+  <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p>You are about to delete <b><i class="title"></i></b> record, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline btn-danger btn-ok" id="del" ng-click="deleteConfirm()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="con_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+                <form name="loginForm" ng-submit="submitForm(loginForm.$valid)" novalidate>
+
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                  </div>
+                  <div class="modal-body">
+                      <div class="row">  
+                        <div class="col-lg-6">
+                            <div class="form-group"  ng-class="{ 'has-error' : loginForm.p_name.$invalid && !loginForm.p_price.$pristine  }">
+                                <label>Product Name</label>
+                                <input type="text"class="form-control" name="p_name" ng-model="product.p_name" required />
+                                <p ng-show="loginForm.p_name.$dirty && loginForm.p_name.$error.required" class="help-block">Name is required</p>
+                          
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group" ng-class="{ 'has-error' : 
+                                 loginForm.p_price.$invalid && !loginForm.p_price.$pristine }">
+                                <label>Product Price</label>
+                                <input type="number" name="p_price" class="form-control" ng-model="product.p_price" required>
+                                <p ng-show="loginForm.p_price.$dirty && loginForm.p_price.$error.required" 
+                                   class="help-block">Price is required</p>
+                            </div>  
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group" ng-class="{ 'has-error' : 
+                                 loginForm.p_cate.$invalid && !loginForm.p_cate.$pristine }">
+                                <label>Product Category</label>
+                                <select class="form-control" ng-model="product.p_cate" required>
+                                    <option value="" disabled>Select category</option>
+                                    <option value="Men's">Men's</option>
+                                    <option value="Women's">Women's</option>
+                                    <option value="Kids">Kids</option>
+                                </select>
+                                <p ng-show="loginForm.p_cate.$dirty && loginForm.p_cate.$error.required" 
+                                   class="help-block">Price is required</p>
+                            </div>  
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group" ng-class="{ 'has-error' : 
+                                 loginForm.p_desc.$invalid && !loginForm.p_desc.$pristine }">
+                                <label>Product Description</label>
+                                <textarea type="text" name="p_desc" class="form-control" ng-model="product.p_desc" required></textarea>
+                                <p ng-show="loginForm.p_desc.$dirty && loginForm.p_desc.$error.required" 
+                                   class="help-block">Description is required</p>
+                            </div>  
+                        </div>
+                      </div>
+
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-outline btn-default" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-outline btn-success btn-ok" id="btnsave"ng-disabled="loginForm.$invalid">Update</button>
+                  </div>
+              </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+<style>
+ .printshow{display:none;}
+ 
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Add Product Details</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+				<div class="row">
+                    <form name="loginForm" ng-submit="submitForm(loginForm.$valid)" novalidate>
+                            
+                        <div class="col-lg-3">
+                            <div class="form-group"  ng-class="{ 'has-error' : loginForm.p_name.$invalid && !loginForm.p_price.$pristine  }">
+                                <label>Product Name <i class="text-danger">*</i></label>
+                                <input type="text"class="form-control" name="p_name" ng-model="product.p_name" required />
+                                <p ng-show="loginForm.p_name.$dirty && loginForm.p_name.$error.required" class="help-block">Name is required</p>
+                          
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="form-group" ng-class="{ 'has-error' : 
+                                 loginForm.p_price.$invalid && !loginForm.p_price.$pristine }">
+                                <label>Product Price <i class="text-danger">*</i></label>
+                                <input type="number" name="p_price" class="form-control" ng-model="product.p_price" required>
+                                <p ng-show="loginForm.p_price.$dirty && loginForm.p_price.$error.required" 
+                                   class="help-block">Price is required</p>
+                            </div>  
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="form-group" ng-class="{ 'has-error' : 
+                                 loginForm.p_cate.$invalid && !loginForm.p_cate.$pristine }">
+                                <label>Product Category <i class="text-danger">*</i></label>
+                                <select class="form-control" ng-model="product.p_cate" required>
+                                    <option value="" disabled>Select category</option>
+                                    <option value="Men's">Men's</option>
+                                    <option value="Women's">Women's</option>
+                                    <option value="Kids">Kids</option>
+                                </select>
+                                <p ng-show="loginForm.p_cate.$dirty && loginForm.p_cate.$error.required" 
+                                   class="help-block">Price is required</p>
+                            </div>  
+                        </div>
+
+                        <div class="col-lg-3">
+                            <div class="form-group" ng-class="{ 'has-error' : 
+                                 loginForm.p_desc.$invalid && !loginForm.p_desc.$pristine }">
+                                <label>Product Description <i class="text-danger">*</i></label>
+                                <textarea type="text" name="p_desc" class="form-control" ng-model="product.p_desc" required></textarea>
+                                <p ng-show="loginForm.p_desc.$dirty && loginForm.p_desc.$error.required" 
+                                   class="help-block">Description is required</p>
+                            </div>  
+                        </div>
+
+                        <div class="col-lg-12">
+                        <button  class="btn btn-outline btn-success" type="submit" id="btnsave"ng-disabled="loginForm.$invalid">SAVE </button>
+                        <button  class="btn btn-outline btn-danger" type="button" onclick="window.location = '#/product/list'" id="btncancel">Back</button>
+                    </div>
+
+                    </form>
+
+            </div>
+        </div>
+    </div>
+</div>
